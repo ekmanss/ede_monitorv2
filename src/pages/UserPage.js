@@ -38,6 +38,7 @@ import {UserListHead, UserListToolbar} from '../sections/@dashboard/user';
 
 const TABLE_HEAD = [
     {id: 'name', label: 'Name', alignRight: false},
+    {id: 'chainId', label: 'ChainId', alignRight: false},
 
     {id: 'address', label: 'Address', alignRight: false},
     {id: 'balance', label: 'Balance', alignRight: false},
@@ -57,6 +58,7 @@ function timestampToTime(timestamp) {
     var s = date.getSeconds();
     return Y + M + D + h + m + s;
 }
+
 // ----------------------------------------------------------------------
 
 
@@ -90,7 +92,6 @@ function applySortFilter(array, comparator, query) {
 }
 
 export default function UserPage() {
-
 
 
     let USERLIST = [];
@@ -202,8 +203,17 @@ export default function UserPage() {
                                 />
                                 <TableBody>
                                     {filteredUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                                        console.log("rowwww",row)
-                                        const {id, taskName, avatarUrl, address, balance, status,timeStamp} = row;
+                                        console.log("rowwww", row)
+                                        const {
+                                            id,
+                                            taskName,
+                                            chainId,
+                                            avatarUrl,
+                                            address,
+                                            balance,
+                                            status,
+                                            timeStamp
+                                        } = row;
                                         const selectedUser = selected.indexOf(taskName) !== -1;
 
                                         return (
@@ -218,6 +228,8 @@ export default function UserPage() {
                                                         </Typography>
                                                     </Stack>
                                                 </TableCell>
+
+                                                <TableCell align="left">{chainId}</TableCell>
 
                                                 <TableCell align="left">{address}</TableCell>
 
