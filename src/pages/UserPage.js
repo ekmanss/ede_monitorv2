@@ -47,7 +47,16 @@ const TABLE_HEAD = [
 ];
 
 // ----------------------------------------------------------------------
-
+function timestampToTime(timestamp) {
+    var date = new Date(timestamp * 1000);//时间戳为10位需*1000，时间戳为13位的话不需乘1000
+    var Y = date.getFullYear() + '-';
+    var M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-';
+    var D = date.getDate() + ' ';
+    var h = date.getHours() + ':';
+    var m = date.getMinutes() + ':';
+    var s = date.getSeconds();
+    return Y + M + D + h + m + s;
+}
 // ----------------------------------------------------------------------
 
 
@@ -193,8 +202,9 @@ export default function UserPage() {
                                 />
                                 <TableBody>
                                     {filteredUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                                        const {id, name, avatarUrl, address, balance, status} = row;
-                                        const selectedUser = selected.indexOf(name) !== -1;
+                                        console.log("rowwww",row)
+                                        const {id, taskName, avatarUrl, address, balance, status,timeStamp} = row;
+                                        const selectedUser = selected.indexOf(taskName) !== -1;
 
                                         return (
                                             <TableRow hover key={id} tabIndex={-1} role="checkbox"
@@ -202,9 +212,9 @@ export default function UserPage() {
 
                                                 <TableCell component="th" scope="row" padding="none">
                                                     <Stack direction="row" alignItems="center" spacing={2}>
-                                                        <Avatar alt={name} src={avatarUrl}/>
+                                                        {/*<Avatar alt={taskName} src={avatarUrl}/>*/}
                                                         <Typography variant="subtitle2" noWrap>
-                                                            {name}
+                                                            {taskName}
                                                         </Typography>
                                                     </Stack>
                                                 </TableCell>
@@ -213,12 +223,12 @@ export default function UserPage() {
 
                                                 <TableCell align="left">{balance}</TableCell>
 
-                                                <TableCell align="left">time</TableCell>
+                                                <TableCell align="left">{timestampToTime(timeStamp)}</TableCell>
 
-                                                <TableCell align="left">
-                                                    <Label
-                                                        color={(status === 'dead' && 'error') || 'success'}>{sentenceCase(status)}</Label>
-                                                </TableCell>
+                                                {/*<TableCell align="left">*/}
+                                                {/*    <Label*/}
+                                                {/*        color={(status === 'dead' && 'error') || 'success'}>{sentenceCase(status)}</Label>*/}
+                                                {/*</TableCell>*/}
 
                                             </TableRow>
                                         );

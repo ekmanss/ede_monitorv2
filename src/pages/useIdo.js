@@ -1,5 +1,6 @@
 import {ethers} from 'ethers'
 import {useState, useEffect, useMemo, useCallback, useRef} from 'react'
+import axios from 'axios'
 
 const provider = new ethers.providers.JsonRpcProvider("https://data-seed-prebsc-1-s2.binance.org:8545/");
 
@@ -37,16 +38,39 @@ export default function useIdo(edeBotExecutor) {
         const fetchMyAPI = async () => {
             try {
 
-                let allBalance = [];
-                for (var i = 0; i < edeBotExecutor.length; i++) {
-                    let rs = await provider.getBalance(edeBotExecutor[i].address);
-                    let bal = ethers.utils.formatEther(rs);
-                    edeBotExecutor[i].balance = Number(bal).toFixed(3);
-                    edeBotExecutor[i].status = 'active';
-                    allBalance.push(edeBotExecutor[i])
-                }
-                console.log(Date.now())
-                setAll(allBalance);
+                // let allBalance = [];
+                // for (var i = 0; i < edeBotExecutor.length; i++) {
+                //     let rs = await provider.getBalance(edeBotExecutor[i].address);
+                //     let bal = ethers.utils.formatEther(rs);
+                //     edeBotExecutor[i].balance = Number(bal).toFixed(3);
+                //     edeBotExecutor[i].status = 'active';
+                //     allBalance.push(edeBotExecutor[i])
+                // }
+                // console.log(Date.now())
+                // setAll(allBalance);
+
+
+                await axios.get(`https://api.ede.finance/last_run_time`).then(res => {
+                    console.log(res.data)
+                    // this.setState({
+                    //     filmList:res.data.data
+                    // })
+
+
+                    let myData = res.data
+                    for (let i = 0; i < myData.length; i++) {
+                        myData[0].id = i;
+                        myData[0].name = myData[0].taskName;
+                        myData[0].status = "active";
+                        myData[0].avatarUrl = `/assets/images/avatars/avatar_${i+1}.jpg`;
+
+
+                    }
+                    console.log("myData:", myData)
+                    setAll(myData);
+
+
+                })
 
             } catch (error) {
                 console.log(error)
