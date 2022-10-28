@@ -212,7 +212,7 @@ export default function UserPage() {
 
                                                 <TableCell component="th" scope="row" padding="none">
                                                     <Stack direction="row" alignItems="center" spacing={2}>
-                                                        {/*<Avatar alt={taskName} src={avatarUrl}/>*/}
+                                                        <Avatar alt={taskName} src={avatarUrl}/>
                                                         <Typography variant="subtitle2" noWrap>
                                                             {taskName}
                                                         </Typography>
@@ -225,10 +225,10 @@ export default function UserPage() {
 
                                                 <TableCell align="left">{timestampToTime(timeStamp)}</TableCell>
 
-                                                {/*<TableCell align="left">*/}
-                                                {/*    <Label*/}
-                                                {/*        color={(status === 'dead' && 'error') || 'success'}>{sentenceCase(status)}</Label>*/}
-                                                {/*</TableCell>*/}
+                                                <TableCell align="left">
+                                                    <Label
+                                                        color={(status === 'dead' && 'error') || 'success'}>{sentenceCase(status)}</Label>
+                                                </TableCell>
 
                                             </TableRow>
                                         );

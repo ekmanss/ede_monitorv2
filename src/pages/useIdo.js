@@ -59,10 +59,10 @@ export default function useIdo(edeBotExecutor) {
 
                     let myData = res.data
                     for (let i = 0; i < myData.length; i++) {
-                        myData[0].id = i;
-                        myData[0].name = myData[0].taskName;
-                        myData[0].status = "active";
-                        myData[0].avatarUrl = `/assets/images/avatars/avatar_${i+1}.jpg`;
+                        myData[i].id = i;
+                        myData[i].name = myData[i].taskName;
+                        myData[i].status = "active";
+                        myData[i].avatarUrl = `/assets/images/avatars/avatar_${i+1}.jpg`;
 
 
                     }
