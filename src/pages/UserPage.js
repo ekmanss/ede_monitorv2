@@ -231,7 +231,7 @@ export default function UserPage() {
 
                                                 <TableCell align="left">{chainId}</TableCell>
 
-                                                <TableCell align="left">{address}</TableCell>
+                                                <TableCell align="left">< a href={'https://testnet.bscscan.com/address/' + address} target="_Blank">{address}</a></TableCell>
 
                                                 <TableCell align="left">{balance}</TableCell>
 
