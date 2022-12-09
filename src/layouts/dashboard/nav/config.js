@@ -16,6 +16,21 @@ const navConfig = [
     path: '/dashboard/user',
     icon: icon('ic_user'),
   },
+  {
+    title: 'liquidity',
+    path: '/dashboard/liquidity',
+    icon: icon('ic_user'),
+  },
+  // {
+  //   title: 'counter',
+  //   path: '/dashboard/counter',
+  //   icon: icon('ic_user'),
+  // },
+  // {
+  //   title: 'query',
+  //   path: '/dashboard/query',
+  //   icon: icon('ic_user'),
+  // }
   // {
   //   title: 'product',
   //   path: '/dashboard/products',

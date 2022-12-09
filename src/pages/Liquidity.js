@@ -2,6 +2,7 @@ import {Helmet} from 'react-helmet-async';
 import {filter} from 'lodash';
 import {sentenceCase} from 'change-case';
 import {useState} from 'react';
+import {shortAddress} from "./stringUtils"
 
 // @mui
 import {
@@ -24,7 +25,9 @@ import {
     TablePagination,
 } from '@mui/material';
 import useIdo from "./useIdo";
+import usePrices from "./usePrices"
 import {edeBotExecutor} from "./address"
+import useQueryLiquidity from "./useQueryLiquidity";
 // components
 import Label from '../components/label';
 import Iconify from '../components/iconify';
@@ -33,18 +36,19 @@ import Scrollbar from '../components/scrollbar';
 import {UserListHead, UserListToolbar} from '../sections/@dashboard/user';
 // mock
 // import USERLIST from '../_mock/user';
-import {shortAddress} from "./stringUtils"
+//redux
+
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-    {id: 'name', label: 'Name', alignRight: false},
-    {id: 'chainId', label: 'ChainId', alignRight: false},
-
-    {id: 'address', label: 'Address', alignRight: false},
-    {id: 'balance', label: 'Balance', alignRight: false},
-    {id: 'lastTime', label: 'LastTime', alignRight: false},
-    {id: 'taskStatus', label: 'TaskStatus', alignRight: false},
-    {id: ''},
+    {id: 'name', label: 'Address', alignRight: false},
+    {id: 'liquidationPrice', label: 'liquidationPrice', alignRight: false},
+    {id: 'indexToken', label: 'IndexToken', alignRight: false},
+    {id: 'size', label: 'Size', alignRight: false},
+    {id: 'averagePrice', label: 'AveragePrice', alignRight: false},
+    {id: 'collateral', label: 'Collateral', alignRight: false},
+    // {id: 'lastTime', label: 'LastTime', alignRight: false},
+    // {id: 'taskStatus', label: 'TaskStatus', alignRight: false},
 ];
 
 // ----------------------------------------------------------------------
@@ -79,6 +83,9 @@ function getComparator(order, orderBy) {
 }
 
 function applySortFilter(array, comparator, query) {
+    if (!array) {
+        array = []
+    }
     const stabilizedThis = array.map((el, index) => [el, index]);
     stabilizedThis.sort((a, b) => {
         const order = comparator(a[0], b[0]);
@@ -95,11 +102,57 @@ export default function UserPage() {
 
 
     let USERLIST = [];
+
+    // const {
+    //     all
+    // } = useIdo(edeBotExecutor)
+    // USERLIST = all;
+
+    const {all} = usePrices()
+    // console.log("price all", all)
+
+    const [currentPair, setCurrentPair] = useState("ETH_SHORT");
+
+
+    const TokenList = {
+        "ETH": "0x2170ed0880ac9a755fd29b2688956bd959f933f8",
+        "BTC": "0x7130d2a12b9bcbfae4f2634d864a1ee1ce3ead9c",
+        "BNB": "0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c"
+    }
+
     const {
-        all
-    } = useIdo(edeBotExecutor)
-    USERLIST = all;
-    console.log("all!!", USERLIST);
+        BTCLong, BTCShort,
+        ETHLong, ETHShort,
+        BNBLong, BNBShort
+    } = useQueryLiquidity(TokenList);
+    // console.log("ETHLong", ETHLong)
+    // console.log("ETHShort", ETHShort)
+
+    if (currentPair === "BTC_LONG") {
+        if (BTCLong) {
+            USERLIST = BTCLong;
+        }
+    } else if (currentPair === "BTC_SHORT") {
+        if (BTCShort) {
+            USERLIST = BTCShort;
+        }
+    } else if (currentPair === "ETH_LONG") {
+        if (ETHLong) {
+            USERLIST = ETHLong;
+        }
+    } else if (currentPair === "ETH_SHORT") {
+        if (ETHShort) {
+            USERLIST = ETHShort;
+        }
+    } else if (currentPair === "BNB_LONG") {
+        if (BNBLong) {
+            USERLIST = BNBLong;
+        }
+    } else if (currentPair === "BNB_SHORT") {
+        if (BNBShort) {
+            USERLIST = BNBShort;
+        }
+    }
 
 
     const [open, setOpen] = useState(null);
@@ -174,6 +227,11 @@ export default function UserPage() {
 
     const isNotFound = !filteredUsers.length && !!filterName;
 
+    const handlToken = (tokenPair) => {
+        console.log("handlToken", tokenPair)
+        setCurrentPair(tokenPair)
+    }
+
     return (
         <>
             <Helmet>
@@ -182,12 +240,71 @@ export default function UserPage() {
 
             <Container>
                 <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
-                    <Typography variant="h4" gutterBottom>
-                        Executor
+                    <Typography variant="h5" gutterBottom>
+                        BTC:{(Number(all.BTCUSDT) / 10 ** 30).toFixed(2)}
+                    </Typography>
+
+                    <Typography variant="h5" gutterBottom>
+                        ETH:{(Number(all.ETHUSDT) / 10 ** 30).toFixed(2)}
+                    </Typography>
+
+                    <Typography variant="h5" gutterBottom>
+                        BNB:{(Number(all.BNBUSDT) / 10 ** 30).toFixed(2)}
+                    </Typography>
+                </Stack>
+
+                <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
+                    <Typography variant="h6" gutterBottom color={currentPair === "BTC_LONG" ? "red" : null}
+                                onClick={() => {
+                                    handlToken("BTC_LONG")
+                                }
+                                }>
+                        BTC_LONG
+                    </Typography>
+
+                    <Typography variant="h6" gutterBottom color={currentPair === "BTC_SHORT" ? "red" : null}
+                                onClick={() => {
+                                    handlToken("BTC_SHORT")
+                                }
+                                }>
+                        BTC_SHORT
+                    </Typography>
+
+                    <Typography variant="h6" gutterBottom color={currentPair === "ETH_LONG" ? "red" : null}
+                                onClick={() => {
+                                    handlToken("ETH_LONG")
+                                }
+                                }>
+                        ETH_LONG
+                    </Typography>
+
+                    <Typography variant="h6" gutterBottom color={currentPair === "ETH_SHORT" ? "red" : null}
+                                onClick={() => {
+                                    handlToken("ETH_SHORT")
+                                }
+                                }>
+                        ETH_SHORT
+                    </Typography>
+
+                    <Typography variant="h6" gutterBottom color={currentPair === "BNB_LONG" ? "red" : null}
+                                onClick={() => {
+                                    handlToken("BNB_LONG")
+                                }
+                                }>
+                        BNB_LONG
+                    </Typography>
+
+                    <Typography variant="h6" gutterBottom color={currentPair === "BNB_SHORT" ? "red" : null}
+                                onClick={() => {
+                                    handlToken("BNB_SHORT")
+                                }
+                                }>
+                        BNB_SHORT
                     </Typography>
                 </Stack>
 
                 <Card>
+                    {/*<UserListToolbar numSelected={selected.length} filterName={filterName} onFilterName={handleFilterByName} />*/}
 
                     <Scrollbar>
                         <TableContainer sx={{minWidth: 800}}>
@@ -212,7 +329,13 @@ export default function UserPage() {
                                             address,
                                             balance,
                                             status,
-                                            timeStamp
+                                            timeStamp,
+                                            account,
+                                            liquidationPrice,
+                                            averagePrice,
+                                            indexToken,
+                                            size,
+                                            collateral
                                         } = row;
                                         const selectedUser = selected.indexOf(taskName) !== -1;
 
@@ -222,27 +345,26 @@ export default function UserPage() {
 
                                                 <TableCell component="th" scope="row" padding="none">
                                                     <Stack direction="row" alignItems="center" spacing={2}>
-                                                        <Avatar alt={taskName} src={avatarUrl}/>
+
                                                         <Typography variant="subtitle2" noWrap>
-                                                            {taskName}
+                                                            < a
+                                                                href={'https://bscscan.com/address/' + account}
+                                                                target="_Blank">{shortAddress(account)}</a>
                                                         </Typography>
                                                     </Stack>
                                                 </TableCell>
 
-                                                <TableCell align="left">{chainId}</TableCell>
+                                                <TableCell
+                                                    align="left">{Number(liquidationPrice).toFixed(2)}</TableCell>
 
                                                 <TableCell align="left">< a
-                                                    href={'https://bscscan.com/address/' + address}
-                                                    target="_Blank">{shortAddress(address)}</a></TableCell>
-
-                                                <TableCell align="left">{balance}</TableCell>
-
-                                                <TableCell align="left">{timestampToTime(timeStamp)}</TableCell>
-
-                                                <TableCell align="left">
-                                                    <Label
-                                                        color={(status === 'dead' && 'error') || 'success'}>{sentenceCase(status)}</Label>
+                                                    href={'https://bscscan.com/address/' + indexToken}
+                                                    target="_Blank">{shortAddress(indexToken)}</a>
                                                 </TableCell>
+
+                                                <TableCell align="left">{Number(size).toFixed(2)}</TableCell>
+                                                <TableCell align="left">{averagePrice}</TableCell>
+                                                <TableCell align="left">{Number(collateral).toFixed(2)}</TableCell>
 
                                             </TableRow>
                                         );

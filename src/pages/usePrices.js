@@ -5,7 +5,7 @@ import axios from 'axios'
 const provider = new ethers.providers.JsonRpcProvider("https://data-seed-prebsc-1-s2.binance.org:8545/");
 
 
-export default function useIdo(edeBotExecutor) {
+export default function usePrices(edeBotExecutor) {
 
     // const [value, setValue] = useState<number>(0);
     // const [timers, setTimers] = useState<Array<NodeJS.Timeout>>([]);
@@ -50,7 +50,7 @@ export default function useIdo(edeBotExecutor) {
                 // setAll(allBalance);
 
 
-                await axios.get(`http://35.228.239.221:9480/last_run_time`).then(res => {
+                await axios.get(`http://35.228.239.221:9480/prices`).then(res => {
                     console.log(res.data)
                     // this.setState({
                     //     filmList:res.data.data
@@ -58,13 +58,13 @@ export default function useIdo(edeBotExecutor) {
 
 
                     let myData = res.data
-                    for (let i = 0; i < myData.length; i++) {
-                        myData[i].id = i;
-                        myData[i].name = myData[i].taskName;
-                        myData[i].status = "active";
-                        myData[i].avatarUrl = `/assets/images/avatars/avatar_${i+1}.jpg`;
-
-                    }
+                    // for (let i = 0; i < myData.length; i++) {
+                    //     myData[i].id = i;
+                    //     myData[i].name = myData[i].taskName;
+                    //     myData[i].status = "active";
+                    //     myData[i].avatarUrl = `/assets/images/avatars/avatar_${i+1}.jpg`;
+                    //
+                    // }
                     // console.log("myData:", myData)
                     setAll(myData);
 
