@@ -50,7 +50,7 @@ export default function useIdo(edeBotExecutor) {
                 // setAll(allBalance);
 
 
-                await axios.get(`https://productapi.ede.finance//last_run_time`).then(res => {
+                await axios.get(`https://productapi.ede.finance/last_run_time`).then(res => {
                     console.log(res.data)
                     // this.setState({
                     //     filmList:res.data.data
