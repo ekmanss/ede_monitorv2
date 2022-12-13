@@ -49,7 +49,7 @@ function useGetLiquidity(tokenAddress, isLong) {
                         indexToken:"${tokenAddress}"
                         # liquidationPrice_lt:"1300"
                     }
-                        orderBy:liquidationPrice,orderDirection:asc
+                        orderBy:liquidationPrice,orderDirection:desc
                     )
                     {
                         status
@@ -91,7 +91,7 @@ function useGetLiquidityShort(tokenAddress, isLong) {
                         indexToken:"${tokenAddress}"
                         # liquidationPrice_lt:"1300"
                     }
-                        orderBy:liquidationPrice,orderDirection:desc
+                        orderBy:liquidationPrice,orderDirection:asc
                     )
                     {
                         status

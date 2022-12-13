@@ -48,10 +48,12 @@ const TABLE_HEAD = [
     {id: 'size', label: 'Size', alignRight: false},
     {id: 'averagePrice', label: 'AveragePrice', alignRight: false},
     {id: 'collateral', label: 'Collateral', alignRight: false},
+    {id: 'leverage', label: 'Leverage', alignRight: false},
+    {id: 'harvest', label: 'Harvest', alignRight: false},
+    {id: ''},
     // {id: 'lastTime', label: 'LastTime', alignRight: false},
     // {id: 'taskStatus', label: 'TaskStatus', alignRight: false},
 ];
-
 
 
 function descendingComparator(a, b, orderBy) {
@@ -220,6 +222,10 @@ export default function UserPage() {
         setCurrentPair(tokenPair)
     }
 
+    const harvest = async (account, collateralToken, indexToken, isLong) => {
+
+    }
+
     return (
         <>
             <Helmet>
@@ -227,6 +233,13 @@ export default function UserPage() {
             </Helmet>
 
             <Container>
+
+                <a className="twitter-share-button"
+                   href="https://twitter.com/intent/tweet?text=Hello%20world&url=https://baidu.com&hashtags=TwitterDev&via=TwitterDev"
+                   data-size="large">
+                    Tweet
+                </a>
+
                 <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
                     <Typography variant="h5" gutterBottom>
                         BTC:{(Number(all.BTCUSDT) / 10 ** 30).toFixed(2)}
@@ -353,8 +366,20 @@ export default function UserPage() {
 
 
                                                 <TableCell align="left">{Number(size).toFixed(2)}</TableCell>
-                                                <TableCell align="left">{averagePrice}</TableCell>
+                                                <TableCell align="left">{Number(averagePrice).toFixed(2)}</TableCell>
                                                 <TableCell align="left">{Number(collateral).toFixed(2)}</TableCell>
+                                                <TableCell
+                                                    align="left">X {Number(Number(size) / Number(collateral)).toFixed(2)}</TableCell>
+
+                                                <TableCell align="left">
+                                                    Harvest
+                                                </TableCell>
+
+                                                <TableCell align="right">
+                                                    <IconButton size="large" color="inherit" onClick={handleOpenMenu}>
+                                                        <Iconify icon={'eva:more-vertical-fill'}/>
+                                                    </IconButton>
+                                                </TableCell>
 
                                             </TableRow>
                                         );
@@ -423,15 +448,19 @@ export default function UserPage() {
                     },
                 }}
             >
-                <MenuItem>
-                    <Iconify icon={'eva:edit-fill'} sx={{mr: 2}}/>
-                    Edit
+                <MenuItem onClick={
+                    () => {
+                        harvest();
+                    }
+                }>
+                    <Iconify icon={'eva:done-all-fill'} sx={{mr: 2}}/>
+                    Harvest
                 </MenuItem>
 
-                <MenuItem sx={{color: 'error.main'}}>
-                    <Iconify icon={'eva:trash-2-outline'} sx={{mr: 2}}/>
-                    Delete
-                </MenuItem>
+                {/*<MenuItem sx={{color: 'error.main'}}>*/}
+                {/*    <Iconify icon={'eva:trash-2-outline'} sx={{mr: 2}}/>*/}
+                {/*    Delete*/}
+                {/*</MenuItem>*/}
             </Popover>
         </>
     );
