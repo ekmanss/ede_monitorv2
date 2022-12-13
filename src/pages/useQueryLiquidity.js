@@ -61,6 +61,7 @@ function useGetLiquidity(tokenAddress, isLong) {
                         indexToken
                         collateralToken
                         isLong
+                        timestamp
                     }
                 }
             `
@@ -102,6 +103,7 @@ function useGetLiquidityShort(tokenAddress, isLong) {
                         indexToken
                         collateralToken
                         isLong
+                        timestamp
                     }
                 }
             `

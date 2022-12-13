@@ -3,6 +3,7 @@ import {filter} from 'lodash';
 import {sentenceCase} from 'change-case';
 import {useState} from 'react';
 import {shortAddress} from "./stringUtils"
+import {timestampToTime} from "./timeUtils"
 
 // @mui
 import {
@@ -43,7 +44,7 @@ import {UserListHead, UserListToolbar} from '../sections/@dashboard/user';
 const TABLE_HEAD = [
     {id: 'name', label: 'Address', alignRight: false},
     {id: 'liquidationPrice', label: 'liquidationPrice', alignRight: false},
-    {id: 'indexToken', label: 'IndexToken', alignRight: false},
+    {id: 'createTime', label: 'CreateTime', alignRight: false},
     {id: 'size', label: 'Size', alignRight: false},
     {id: 'averagePrice', label: 'AveragePrice', alignRight: false},
     {id: 'collateral', label: 'Collateral', alignRight: false},
@@ -51,19 +52,6 @@ const TABLE_HEAD = [
     // {id: 'taskStatus', label: 'TaskStatus', alignRight: false},
 ];
 
-// ----------------------------------------------------------------------
-function timestampToTime(timestamp) {
-    var date = new Date(timestamp * 1000);//时间戳为10位需*1000，时间戳为13位的话不需乘1000
-    var Y = date.getFullYear() + '-';
-    var M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-';
-    var D = date.getDate() + ' ';
-    var h = date.getHours() + ':';
-    var m = date.getMinutes() + ':';
-    var s = date.getSeconds();
-    return Y + M + D + h + m + s;
-}
-
-// ----------------------------------------------------------------------
 
 
 function descendingComparator(a, b, orderBy) {
@@ -259,7 +247,7 @@ export default function UserPage() {
                                     handlToken("BTC_LONG")
                                 }
                                 }>
-                        BTC_LONG
+                        BTC_LONG({BTCLong ? BTCLong.length : 0})
                     </Typography>
 
                     <Typography variant="h6" gutterBottom color={currentPair === "BTC_SHORT" ? "red" : null}
@@ -267,7 +255,7 @@ export default function UserPage() {
                                     handlToken("BTC_SHORT")
                                 }
                                 }>
-                        BTC_SHORT
+                        BTC_SHORT({BTCShort ? BTCShort.length : 0})
                     </Typography>
 
                     <Typography variant="h6" gutterBottom color={currentPair === "ETH_LONG" ? "red" : null}
@@ -275,7 +263,7 @@ export default function UserPage() {
                                     handlToken("ETH_LONG")
                                 }
                                 }>
-                        ETH_LONG
+                        ETH_LONG({ETHLong ? ETHLong.length : 0})
                     </Typography>
 
                     <Typography variant="h6" gutterBottom color={currentPair === "ETH_SHORT" ? "red" : null}
@@ -283,7 +271,7 @@ export default function UserPage() {
                                     handlToken("ETH_SHORT")
                                 }
                                 }>
-                        ETH_SHORT
+                        ETH_SHORT({ETHShort ? ETHShort.length : 0})
                     </Typography>
 
                     <Typography variant="h6" gutterBottom color={currentPair === "BNB_LONG" ? "red" : null}
@@ -291,7 +279,7 @@ export default function UserPage() {
                                     handlToken("BNB_LONG")
                                 }
                                 }>
-                        BNB_LONG
+                        BNB_LONG({BNBLong ? BNBLong.length : 0})
                     </Typography>
 
                     <Typography variant="h6" gutterBottom color={currentPair === "BNB_SHORT" ? "red" : null}
@@ -299,7 +287,7 @@ export default function UserPage() {
                                     handlToken("BNB_SHORT")
                                 }
                                 }>
-                        BNB_SHORT
+                        BNB_SHORT({BNBShort ? BNBShort.length : 0})
                     </Typography>
                 </Stack>
 
@@ -335,7 +323,8 @@ export default function UserPage() {
                                             averagePrice,
                                             indexToken,
                                             size,
-                                            collateral
+                                            collateral,
+                                            timestamp
                                         } = row;
                                         const selectedUser = selected.indexOf(taskName) !== -1;
 
@@ -355,12 +344,13 @@ export default function UserPage() {
                                                 </TableCell>
 
                                                 <TableCell
-                                                    align="left">{Number(liquidationPrice).toFixed(2)}</TableCell>
-
-                                                <TableCell align="left">< a
-                                                    href={'https://bscscan.com/address/' + indexToken}
-                                                    target="_Blank">{shortAddress(indexToken)}</a>
+                                                    align="left">{Number(liquidationPrice).toFixed(2)}
                                                 </TableCell>
+
+                                                <TableCell align="left">
+                                                    {timestampToTime(timestamp)}
+                                                </TableCell>
+
 
                                                 <TableCell align="left">{Number(size).toFixed(2)}</TableCell>
                                                 <TableCell align="left">{averagePrice}</TableCell>
