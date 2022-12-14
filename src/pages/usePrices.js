@@ -51,7 +51,7 @@ export default function usePrices(edeBotExecutor) {
 
 
                 await axios.get(`https://data.ede.finance/prices`).then(res => {
-                    console.log(res.data)
+                    // console.log(res.data)
                     // this.setState({
                     //     filmList:res.data.data
                     // })

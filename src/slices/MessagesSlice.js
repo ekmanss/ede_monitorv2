@@ -2,21 +2,9 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 const MESSAGES_MAX_DISPLAY_DURATION = 3000;
 let nb_messages = 0;
-
-interface Message {
-  id: number;
-  title: string;
-  text: string;
-  severity: string;
-  created: number;
-  open: boolean;
-}
-interface MessagesState {
-  items: Array<Message>;
-}
 // Adds a message to the store
-const createMessage = function (state: MessagesState, severity: string, title: string, text: string) {
-  let message: Message = {
+const createMessage = function (state, severity, title, text) {
+  let message= {
     id: nb_messages++,
     severity,
     title,
@@ -27,7 +15,7 @@ const createMessage = function (state: MessagesState, severity: string, title: s
   state.items.push(message);
   state.items = state.items.slice(0);
 };
-const initialState: MessagesState = {
+const initialState = {
   items: [],
 };
 const messagesSlice = createSlice({
@@ -35,18 +23,18 @@ const messagesSlice = createSlice({
   initialState,
   reducers: {
     // Creates an error message
-    error(state, action: PayloadAction<string>) {
+    error(state, action) {
       createMessage(state, "error", "Error", action.payload);
     },
     // Creates an information message
-    info(state, action: PayloadAction<string>) {
+    info(state, action) {
       createMessage(state, "info", "", action.payload);
     },
-    success(state, action: PayloadAction<string>) {
+    success(state, action) {
       createMessage(state, "success", "", action.payload);
     },
     // Closes a message
-    close(state, action: PayloadAction<Message>) {
+    close(state, action) {
       state.items = state.items.map(message => {
         return message.id == action.payload.id ? Object.assign({}, message, { open: false }) : message;
       });

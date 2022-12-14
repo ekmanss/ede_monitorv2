@@ -27,6 +27,7 @@ import {
 } from '@mui/material';
 import useIdo from "./useIdo";
 import usePrices from "./usePrices"
+import useLiquidity from "../hooks/useLiquidity";
 import {edeBotExecutor} from "./address"
 import useQueryLiquidity from "./useQueryLiquidity";
 // components
@@ -49,7 +50,6 @@ const TABLE_HEAD = [
     {id: 'averagePrice', label: 'AveragePrice', alignRight: false},
     {id: 'collateral', label: 'Collateral', alignRight: false},
     {id: 'leverage', label: 'Leverage', alignRight: false},
-    {id: 'harvest', label: 'Harvest', alignRight: false},
     {id: ''},
     // {id: 'lastTime', label: 'LastTime', alignRight: false},
     // {id: 'taskStatus', label: 'TaskStatus', alignRight: false},
@@ -90,6 +90,7 @@ function applySortFilter(array, comparator, query) {
 
 export default function UserPage() {
 
+    const {harvestPost} = useLiquidity()
 
     let USERLIST = [];
 
@@ -102,7 +103,7 @@ export default function UserPage() {
     // console.log("price all", all)
 
     const [currentPair, setCurrentPair] = useState("ETH_SHORT");
-
+    const [currentRow, setCurrentRow] = useState(null);
 
     const TokenList = {
         "ETH": "0x2170ed0880ac9a755fd29b2688956bd959f933f8",
@@ -159,8 +160,9 @@ export default function UserPage() {
 
     const [rowsPerPage, setRowsPerPage] = useState(10);
 
-    const handleOpenMenu = (event) => {
+    const handleOpenMenu = (event,row) => {
         setOpen(event.currentTarget);
+        setCurrentRow(row);
     };
 
     const handleCloseMenu = () => {
@@ -222,8 +224,8 @@ export default function UserPage() {
         setCurrentPair(tokenPair)
     }
 
-    const harvest = async (account, collateralToken, indexToken, isLong) => {
-
+    const harvest = async ({account, collateralToken, indexToken, isLong}) => {
+        await harvestPost(account, collateralToken, indexToken, isLong);
     }
 
     return (
@@ -321,7 +323,7 @@ export default function UserPage() {
                                 />
                                 <TableBody>
                                     {filteredUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                                        console.log("rowwww", row)
+                                        // console.log("rowwww", row)
                                         const {
                                             id,
                                             taskName,
@@ -371,12 +373,9 @@ export default function UserPage() {
                                                 <TableCell
                                                     align="left">X {Number(Number(size) / Number(collateral)).toFixed(2)}</TableCell>
 
-                                                <TableCell align="left">
-                                                    Harvest
-                                                </TableCell>
 
                                                 <TableCell align="right">
-                                                    <IconButton size="large" color="inherit" onClick={handleOpenMenu}>
+                                                    <IconButton size="large" color="inherit" onClick={(e)=>handleOpenMenu(e,row)}>
                                                         <Iconify icon={'eva:more-vertical-fill'}/>
                                                     </IconButton>
                                                 </TableCell>
@@ -450,7 +449,7 @@ export default function UserPage() {
             >
                 <MenuItem onClick={
                     () => {
-                        harvest();
+                        harvest(currentRow);
                     }
                 }>
                     <Iconify icon={'eva:done-all-fill'} sx={{mr: 2}}/>

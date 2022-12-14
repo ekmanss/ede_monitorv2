@@ -1,0 +1,76 @@
+.loading-view {
+  position: relative;
+  z-index: 9999;
+}
+
+.messageInfo.bg1 {
+  background: #2d6a4f;
+}
+
+.messageInfo.bg2 {
+  background: #f05454;
+}
+
+.messageInfo.bg3 {
+  background: #fca652;
+}
+
+.messageInfo.bg4 {
+  background: #3282b8;
+}
+
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+  }
+
+  100% {
+    opacity: 1;
+  }
+}
+
+.messageInfo {
+  position: fixed;
+  top: 84px;
+  left: 50%;
+  transform: translateX(-50%);
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 10px;
+  width: 600px;
+  max-width: 100%;
+  // transition: opacity 225ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  animation: fade-in 1s;
+  -moz-animation: fade-in 1s; /* Firefox */
+  -webkit-animation: fade-in 1s; /* Safari 和 Chrome */
+  -o-animation: fade-in 1s;
+  .message {
+    padding-right: 26px;
+
+    .message-l {
+      position: relative;
+
+      .messageIcon {
+        position: absolute;
+        top: -40px;
+        left: 24px;
+      }
+    }
+
+    .messageTitle {
+      line-height: 30px;
+    }
+
+    .messageContent {
+      line-height: 20px;
+    }
+  }
+}
+
+.Toastify__toast-container {
+  width: 600px;
+  max-width: 100%;
+}
+.Toastify__toast--error,
+.Toastify__toast--success {
+  background: transparent !important;
+}
