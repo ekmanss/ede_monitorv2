@@ -21,6 +21,11 @@ const navConfig = [
     path: '/dashboard/liquidity',
     icon: icon('ic_user'),
   },
+  {
+    title: 'esbtuser',
+    path: '/dashboard/esbtuser',
+    icon: icon('ic_user'),
+  },
   // {
   //   title: 'counter',
   //   path: '/dashboard/counter',

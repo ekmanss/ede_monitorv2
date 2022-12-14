@@ -6,6 +6,7 @@ import SimpleLayout from './layouts/simple';
 import BlogPage from './pages/BlogPage';
 import UserPage from './pages/UserPage';
 import Liquidity from './pages/Liquidity';
+import Esbtuser from './pages/Esbtuser';
 import LoginPage from './pages/LoginPage';
 import Page404 from './pages/Page404';
 import ProductsPage from './pages/ProductsPage';
@@ -25,6 +26,7 @@ export default function Router() {
         { path: 'app', element: <DashboardAppPage /> },
         { path: 'user', element: <UserPage /> },
         { path: 'liquidity', element: <Liquidity /> },
+        { path: 'esbtuser', element: <Esbtuser /> },
         { path: 'counter', element: <Counter /> },
         { path: 'query', element: <ReactQuery /> },
         { path: 'products', element: <ProductsPage /> },
