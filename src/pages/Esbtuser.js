@@ -35,10 +35,12 @@ import {UserListHead, UserListToolbar} from '../sections/@dashboard/user';
 // mock
 // import USERLIST from '../_mock/user';
 import {shortAddress} from "./stringUtils"
+import {ethers} from "ethers";
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
     {id: 'address', label: 'Address', alignRight: false},
+    {id: 'totalPoints', label: 'TotalPoints', alignRight: false},
     {id: 'invitedTimestamp', label: 'InvitedTime', alignRight: false},
     {id: 'parent', label: 'Parent', alignRight: false},
     {id: 'sons', label: 'Sons', alignRight: false},
@@ -215,7 +217,8 @@ export default function UserPage() {
                                             timeStamp,
                                             parent,
                                             sons,
-                                            invitedTimestamp
+                                            invitedTimestamp,
+                                            totalPoints
                                         } = row;
                                         const selectedUser = selected.indexOf(taskName) !== -1;
 
@@ -233,6 +236,8 @@ export default function UserPage() {
                                                         </Typography>
                                                     </Stack>
                                                 </TableCell>
+
+                                                <TableCell align="left">{Number(ethers.utils.formatEther(totalPoints)).toFixed(2)}</TableCell>
 
                                                 <TableCell align="left">{timestampToTime(invitedTimestamp)}</TableCell>
 
