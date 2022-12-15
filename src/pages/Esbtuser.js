@@ -63,12 +63,23 @@ function timestampToTime(timestamp) {
 
 
 function descendingComparator(a, b, orderBy) {
-    if (b[orderBy] < a[orderBy]) {
-        return -1;
+
+    if(orderBy === "totalPoints"){
+        if (Number(b[orderBy]) < Number(a[orderBy])) {
+            return -1;
+        }
+        if (Number(b[orderBy]) > Number(a[orderBy])) {
+            return 1;
+        }
+    }else{
+        if (b[orderBy] < a[orderBy]) {
+            return -1;
+        }
+        if (b[orderBy] > a[orderBy]) {
+            return 1;
+        }
     }
-    if (b[orderBy] > a[orderBy]) {
-        return 1;
-    }
+
     return 0;
 }
 
@@ -112,7 +123,7 @@ export default function UserPage() {
 
     const [selected, setSelected] = useState([]);
 
-    const [orderBy, setOrderBy] = useState('name');
+    const [orderBy, setOrderBy] = useState('totalPoints');
 
     const [filterName, setFilterName] = useState('');
 
@@ -237,7 +248,7 @@ export default function UserPage() {
                                                     </Stack>
                                                 </TableCell>
 
-                                                <TableCell align="left">{Number(ethers.utils.formatEther(totalPoints)).toFixed(2)}</TableCell>
+                                                <TableCell align="left">{totalPoints}</TableCell>
 
                                                 <TableCell align="left">{timestampToTime(invitedTimestamp)}</TableCell>
 

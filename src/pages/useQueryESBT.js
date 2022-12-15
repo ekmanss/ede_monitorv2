@@ -9,6 +9,7 @@ import {
 import {ReactQueryDevtools} from "@tanstack/react-query-devtools";
 import {request, gql} from "graphql-request";
 import {random} from "lodash";
+import {ethers} from "ethers";
 
 
 function useQueryMintedUser() {
@@ -45,6 +46,7 @@ function useQueryMintedUser() {
             accounts[i].name = accounts[i].address;
             accounts[i].status = "active";
             accounts[i].avatarUrl = `/assets/images/avatars/avatar_${random(1,8) + 1}.jpg`;
+            accounts[i].totalPoints = Number(ethers.utils.formatEther(accounts[i].totalPoints)).toFixed(2)+""
         }
         return {commonDataStore,accounts};
     });
