@@ -119,7 +119,7 @@ export default function UserPage() {
 
     const [page, setPage] = useState(0);
 
-    const [order, setOrder] = useState('asc');
+    const [order, setOrder] = useState('desc');
 
     const [selected, setSelected] = useState([]);
 
