@@ -112,7 +112,7 @@ export default function UserPage() {
     // console.log("all!!", USERLIST);
 
     const {accounts,commonDataStore} = useQueryESBT();
-    console.log("***accounts",accounts);
+    // console.log("***accounts",accounts);
     USERLIST = accounts;
 
     const [open, setOpen] = useState(null);
@@ -217,7 +217,7 @@ export default function UserPage() {
                                 />
                                 <TableBody>
                                     {filteredUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                                        console.log("rowwww", row)
+                                        // console.log("rowwww", row)
                                         const {
                                             id,
                                             taskName,

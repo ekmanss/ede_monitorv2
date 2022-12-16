@@ -23,7 +23,7 @@ function useQueryMintedUser() {
                         value
                     }
                     accounts
-                    (where:{invitedTimestamp_gt:"0"},orderBy:invitedTimestamp,orderDirection:desc)
+                    (where:{first: 1000,invitedTimestamp_gt:"0"},orderBy:invitedTimestamp,orderDirection:desc)
                     {
                         address
                         invitedTimestamp
@@ -38,8 +38,9 @@ function useQueryMintedUser() {
                 }
             `
         );
-        console.log("!!!useQueryMintedUser::commonDataStore", commonDataStore);
-        console.log("!!!useQueryMintedUser::accounts", accounts);
+        // console.log("!!!useQueryMintedUser::commonDataStore", commonDataStore);
+        // console.log("!!!useQueryMintedUser::accounts", accounts);
+        // console.log("accounts.length",accounts.length)
 
         for (let i = 0; i < accounts.length; i++) {
             accounts[i].id = i;
