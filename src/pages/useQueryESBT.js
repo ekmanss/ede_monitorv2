@@ -23,7 +23,7 @@ function useQueryMintedUser() {
                         value
                     }
                     accounts
-                    (where:{first: 300,invitedTimestamp_gt:"0"},orderBy:invitedTimestamp,orderDirection:desc)
+                    (first: 1000, where:{invitedTimestamp_gt:"0"},orderBy:invitedTimestamp,orderDirection:desc)
                     {
                         address
                         invitedTimestamp
