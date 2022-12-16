@@ -22,8 +22,13 @@ const navConfig = [
     icon: icon('ic_user'),
   },
   {
-    title: 'esbtuser',
+    title: 'ESBT',
     path: '/dashboard/esbtuser',
+    icon: icon('ic_user'),
+  },
+  {
+    title: 'vestaker',
+    path: '/dashboard/vestaker',
     icon: icon('ic_user'),
   },
   // {

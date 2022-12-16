@@ -12,28 +12,17 @@ import {random} from "lodash";
 import {ethers} from "ethers";
 
 
-function useQueryMintedUser() {
+function useQueryGraph() {
 
     return useQuery([], async () => {
         const {commonDataStore, accounts} = await request(
-            "https://api.thegraph.com/subgraphs/name/metaverseblock/esbt002",
+            "https://api.thegraph.com/subgraphs/name/metaverseblock/vestaker",
             gql`
                 query {
-                    commonDataStore(id: "totalMintedCounter") {
-                        value
-                    }
-                    accounts
-                    (first: 1000, where:{invitedTimestamp_gt:"0"},orderBy:invitedTimestamp,orderDirection:desc)
-                    {
+                    accounts(first: 1000,orderBy:lockTimestamp,orderDirection:desc) {
                         address
-                        invitedTimestamp
-                        totalPoints
-                        parent {
-                            address
-                        }
-                        sons {
-                            address
-                        }
+                        totalStaked
+                        lockTimestamp
                     }
                 }
             `
@@ -47,15 +36,14 @@ function useQueryMintedUser() {
             accounts[i].name = accounts[i].address;
             accounts[i].status = "active";
             accounts[i].avatarUrl = `/assets/images/avatars/avatar_${random(1,8) + 1}.jpg`;
-            accounts[i].totalPoints = Number(ethers.utils.formatEther(accounts[i].totalPoints)).toFixed(2)+"";
-            accounts[i].sonsAmount = accounts[i].sons.length;
+            accounts[i].totalPoints = Number(ethers.utils.formatEther(accounts[i].totalStaked)).toFixed(2)+""
         }
         return {commonDataStore,accounts};
     });
 }
 
-export default function useQueryESBT() {
-    const {status, data, error, isFetching} = useQueryMintedUser();
+export default function useQueryVestaker() {
+    const {status, data, error, isFetching} = useQueryGraph();
     console.log("@@useQueryESBT commonDataStore",data);
 
     return isFetching?{accounts: [],commonDataStore:{}}:data;

@@ -7,6 +7,7 @@ import BlogPage from './pages/BlogPage';
 import UserPage from './pages/UserPage';
 import Liquidity from './pages/Liquidity';
 import Esbtuser from './pages/Esbtuser';
+import Vestaker from  './pages/Vestaker';
 import LoginPage from './pages/LoginPage';
 import Page404 from './pages/Page404';
 import ProductsPage from './pages/ProductsPage';
@@ -27,6 +28,7 @@ export default function Router() {
         { path: 'user', element: <UserPage /> },
         { path: 'liquidity', element: <Liquidity /> },
         { path: 'esbtuser', element: <Esbtuser /> },
+        { path: 'vestaker', element: <Vestaker /> },
         { path: 'counter', element: <Counter /> },
         { path: 'query', element: <ReactQuery /> },
         { path: 'products', element: <ProductsPage /> },
