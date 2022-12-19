@@ -31,14 +31,17 @@ function useQueryGraph() {
         // console.log("!!!useQueryMintedUser::accounts", accounts);
         // console.log("accounts.length",accounts.length)
 
+        let totalStaked = ethers.BigNumber.from(0);
         for (let i = 0; i < accounts.length; i++) {
             accounts[i].id = i;
             accounts[i].name = accounts[i].address;
             accounts[i].status = "active";
             accounts[i].avatarUrl = `/assets/images/avatars/avatar_${random(1,8) + 1}.jpg`;
-            accounts[i].totalPoints = Number(ethers.utils.formatEther(accounts[i].totalStaked)).toFixed(2)+""
+            accounts[i].totalPoints = Number(ethers.utils.formatEther(accounts[i].totalStaked)).toFixed(2)+"";
+
+            totalStaked = totalStaked.add(ethers.BigNumber.from(accounts[i].totalStaked));
         }
-        return {commonDataStore,accounts};
+        return {commonDataStore,accounts,totalStaked};
     });
 }
 

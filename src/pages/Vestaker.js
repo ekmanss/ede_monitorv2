@@ -109,7 +109,7 @@ export default function UserPage() {
     // USERLIST = all;
     // console.log("all!!", USERLIST);
 
-    const {accounts,commonDataStore} = useQueryVestaker();
+    const {accounts,totalStaked} = useQueryVestaker();
     // console.log("***accounts",accounts);
     USERLIST = accounts;
 
@@ -193,6 +193,11 @@ export default function UserPage() {
 
             <Container>
 
+                <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
+                    <Typography variant="h4" gutterBottom>
+                        Total: {totalStaked?Number(ethers.utils.formatEther(totalStaked)).toFixed(2):0}
+                    </Typography>
+                </Stack>
                 <Card>
 
                     <UserListToolbar numSelected={selected.length} filterName={filterName} onFilterName={handleFilterByName} />
