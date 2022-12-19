@@ -2,7 +2,7 @@ import {Helmet} from 'react-helmet-async';
 import {filter} from 'lodash';
 import {sentenceCase} from 'change-case';
 import {useState} from 'react';
-
+import mylog from "./Frame44.png"
 // @mui
 import {
     Card,
@@ -196,6 +196,7 @@ export default function UserPage() {
             </Helmet>
 
             <Container>
+                <img src={mylog}/>
                 <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
                     <Typography variant="h4" gutterBottom>
                         Total: {commonDataStore.value}
