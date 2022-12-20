@@ -2,7 +2,7 @@ import {Helmet} from 'react-helmet-async';
 import {filter} from 'lodash';
 import {sentenceCase} from 'change-case';
 import {useState} from 'react';
-import mylog from "./Frame44.png"
+
 // @mui
 import {
     Card,
@@ -24,7 +24,8 @@ import {
     TablePagination,
 } from '@mui/material';
 import useIdo from "./useIdo";
-import useQueryESBT from "./useQueryESBT";
+// import useQueryVestaker from "./useQueryVestaker";
+import useQueryElpstaker from "./useQueryElpstaker";
 import {edeBotExecutor} from "./address"
 // components
 import Label from '../components/label';
@@ -40,12 +41,7 @@ import {ethers} from "ethers";
 
 const TABLE_HEAD = [
     {id: 'address', label: 'Address', alignRight: false},
-    {id: 'totalPoints', label: 'TotalPoints', alignRight: false},
-    {id: 'invitedTimestamp', label: 'InvitedTime', alignRight: false},
-    {id: 'parent', label: 'Parent', alignRight: false},
-    {id: 'sons', label: 'Sons', alignRight: false},
-    {id: 'sonsAmount', label: 'SonsAmount', alignRight: false},
-
+    {id: 'totalPoints', label: 'StakedAmount', alignRight: false},
 
 ];
 
@@ -113,7 +109,7 @@ export default function UserPage() {
     // USERLIST = all;
     // console.log("all!!", USERLIST);
 
-    const {accounts,commonDataStore} = useQueryESBT();
+    const {accounts,totalStaked} = useQueryElpstaker();
     // console.log("***accounts",accounts);
     USERLIST = accounts;
 
@@ -125,7 +121,7 @@ export default function UserPage() {
 
     const [selected, setSelected] = useState([]);
 
-    const [orderBy, setOrderBy] = useState('invitedTimestamp');
+    const [orderBy, setOrderBy] = useState('totalPoints');
 
     const [filterName, setFilterName] = useState('');
 
@@ -196,13 +192,12 @@ export default function UserPage() {
             </Helmet>
 
             <Container>
-                <img src={mylog}/>
+
                 <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
                     <Typography variant="h4" gutterBottom>
-                        Total: {commonDataStore.value}
+                        Total: {totalStaked?Number(ethers.utils.formatEther(totalStaked)).toFixed(2):0}
                     </Typography>
                 </Stack>
-
                 <Card>
 
                     <UserListToolbar numSelected={selected.length} filterName={filterName} onFilterName={handleFilterByName} />
@@ -232,9 +227,8 @@ export default function UserPage() {
                                             timeStamp,
                                             parent,
                                             sons,
-                                            invitedTimestamp,
-                                            totalPoints,
-                                            sonsAmount
+                                            lockTimestamp,
+                                            totalPoints
                                         } = row;
                                         const selectedUser = selected.indexOf(taskName) !== -1;
 
@@ -254,41 +248,6 @@ export default function UserPage() {
                                                 </TableCell>
 
                                                 <TableCell align="left">{totalPoints}</TableCell>
-
-                                                <TableCell align="left">{timestampToTime(invitedTimestamp)}</TableCell>
-
-                                                <TableCell component="th" scope="row" padding="none">
-                                                    <Table direction="row" alignItems="center" spacing={2}>
-                                                        <Typography variant="subtitle2" noWrap>
-                                                            < a
-                                                                href={'https://bscscan.com/address/' + parent.address}
-                                                                target="_Blank">{shortAddress(parent.address)}</a>
-                                                        </Typography>
-                                                    </Table>
-                                                </TableCell>
-
-
-                                                <TableCell component="th" scope="row" padding="none">
-                                                    <Table direction="row" alignItems="center" spacing={2}>
-
-                                                        {
-                                                            sons.map((son) => {
-                                                                return (
-                                                                    <Typography variant="subtitle2" noWrap>
-                                                                        < a
-                                                                            href={'https://bscscan.com/address/' + son.address}
-                                                                            target="_Blank">{shortAddress(son.address)}</a>
-                                                                    </Typography>
-                                                                )
-                                                            })
-                                                        }
-
-                                                    </Table>
-                                                </TableCell>
-
-                                                <TableCell align="left">{sonsAmount}</TableCell>
-
-
 
                                             </TableRow>
                                         );

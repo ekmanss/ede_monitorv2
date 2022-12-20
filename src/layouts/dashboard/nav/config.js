@@ -31,6 +31,11 @@ const navConfig = [
     path: '/dashboard/vestaker',
     icon: icon('ic_user'),
   },
+  {
+    title: 'elpstaker',
+    path: '/dashboard/elpstaker',
+    icon: icon('ic_lock'),
+  },
   // {
   //   title: 'counter',
   //   path: '/dashboard/counter',
