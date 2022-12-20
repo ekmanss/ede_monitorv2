@@ -37,7 +37,7 @@ function useQueryGraph() {
             accounts[i].name = accounts[i].address;
             accounts[i].status = "active";
             accounts[i].avatarUrl = `/assets/images/avatars/avatar_${random(1,8) + 1}.jpg`;
-            accounts[i].totalPoints = Number(ethers.utils.formatEther(accounts[i].totalStaked)).toFixed(2)+"";
+            accounts[i].totalPoints = Number(ethers.utils.formatEther(accounts[i].totalStaked)).toFixed(0)+"";
 
             totalStaked = totalStaked.add(ethers.BigNumber.from(accounts[i].totalStaked));
         }

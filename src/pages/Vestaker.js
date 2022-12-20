@@ -42,6 +42,7 @@ const TABLE_HEAD = [
     {id: 'address', label: 'Address', alignRight: false},
     {id: 'totalPoints', label: 'StakedAmount', alignRight: false},
     {id: 'lockTimestamp', label: 'LockTimestamp', alignRight: false},
+    {id: 'percentage', label: 'Percentage', alignRight: false},
 
 ];
 
@@ -98,6 +99,16 @@ function applySortFilter(array, comparator, query) {
         return filter(array, (_user) => _user.address.toLowerCase().indexOf(query.toLowerCase()) !== -1);
     }
     return stabilizedThis.map((el) => el[0]);
+}
+
+function toThousands(num) {
+    var num = (num || 0).toString(), result = '';
+    while (num.length > 3) {
+        result = ',' + num.slice(-3) + result;
+        num = num.slice(0, num.length - 3);
+    }
+    if (num) { result = num + result; }
+    return result;
 }
 
 export default function UserPage() {
@@ -195,7 +206,7 @@ export default function UserPage() {
 
                 <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
                     <Typography variant="h4" gutterBottom>
-                        Total: {totalStaked?Number(ethers.utils.formatEther(totalStaked)).toFixed(2):0}
+                        Total: {totalStaked? toThousands(Number(ethers.utils.formatEther(totalStaked)).toFixed(0)) :0}
                     </Typography>
                 </Stack>
                 <Card>
@@ -247,9 +258,13 @@ export default function UserPage() {
                                                     </Stack>
                                                 </TableCell>
 
-                                                <TableCell align="left">{totalPoints}</TableCell>
+                                                <TableCell align="left">{toThousands(totalPoints+'')}</TableCell>
 
                                                 <TableCell align="left">{timestampToTime(lockTimestamp)}</TableCell>
+
+                                                <TableCell align="left">{totalStaked?
+                                                    Number(totalPoints/ethers.utils.formatEther(totalStaked)*100).toFixed(2)
+                                                    :0} %</TableCell>
                                             </TableRow>
                                         );
                                     })}
