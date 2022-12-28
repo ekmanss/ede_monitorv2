@@ -36,6 +36,7 @@ import {UserListHead, UserListToolbar} from '../sections/@dashboard/user';
 // import USERLIST from '../_mock/user';
 import {shortAddress} from "./stringUtils"
 import {ethers} from "ethers";
+import ExportJsonExcel from "js-export-excel";
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
@@ -63,14 +64,14 @@ function timestampToTime(timestamp) {
 
 function descendingComparator(a, b, orderBy) {
 
-    if(orderBy === "totalPoints"){
+    if (orderBy === "totalPoints") {
         if (Number(b[orderBy]) < Number(a[orderBy])) {
             return -1;
         }
         if (Number(b[orderBy]) > Number(a[orderBy])) {
             return 1;
         }
-    }else{
+    } else {
         if (b[orderBy] < a[orderBy]) {
             return -1;
         }
@@ -107,7 +108,9 @@ function toThousands(num) {
         result = ',' + num.slice(-3) + result;
         num = num.slice(0, num.length - 3);
     }
-    if (num) { result = num + result; }
+    if (num) {
+        result = num + result;
+    }
     return result;
 }
 
@@ -120,7 +123,7 @@ export default function UserPage() {
     // USERLIST = all;
     // console.log("all!!", USERLIST);
 
-    const {accounts,totalStaked} = useQueryVestaker();
+    const {accounts, totalStaked} = useQueryVestaker();
     // console.log("***accounts",accounts);
     USERLIST = accounts;
 
@@ -196,6 +199,35 @@ export default function UserPage() {
 
     const isNotFound = !filteredUsers.length && !!filterName;
 
+    const downloadFileToExcel = (filteredUsers) => {
+        let newDate = [];
+
+        filteredUsers.forEach((item) => {
+            newDate.push({
+                "address": item.address,
+                "stakedAmount": toThousands(item.totalPoints + ''),
+                "lockTimestamp": timestampToTime(item.lockTimestamp),
+                "percentage": Number(item.totalPoints / ethers.utils.formatEther(totalStaked) * 100).toFixed(2) + '%',
+            })
+        })
+
+        let dataTable = [];  //excel文件中的数据内容
+        let option = {};  //option代表的就是excel文件
+        dataTable = newDate;  //数据源
+        option.fileName = "Vestaker";  //excel文件名称
+        console.log("data===", dataTable)
+        option.datas = [
+            {
+                sheetData: dataTable,  //excel文件中的数据源
+                sheetName: 'Sheet1',  //excel文件中sheet页名称
+                sheetFilter: ['address', 'stakedAmount', 'lockTimestamp', 'percentage'],  //excel文件中需显示的列数据
+                sheetHeader: ['Address', 'StakedAmount', 'LockTimestamp', 'Percentage'],  //excel文件中每列的表头名称
+            }
+        ]
+        let toExcel = new ExportJsonExcel(option);  //生成excel文件
+        toExcel.saveExcel();  //下载excel文件
+    };
+
     return (
         <>
             <Helmet>
@@ -206,12 +238,18 @@ export default function UserPage() {
 
                 <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
                     <Typography variant="h4" gutterBottom>
-                        Total: {totalStaked? toThousands(Number(ethers.utils.formatEther(totalStaked)).toFixed(0)) :0}
+                        Total: {totalStaked ? toThousands(Number(ethers.utils.formatEther(totalStaked)).toFixed(0)) : 0}
+                    </Typography>
+                    <Typography variant="h4" gutterBottom onClick={() => {
+                        downloadFileToExcel(filteredUsers)
+                    }}>
+                        excel
                     </Typography>
                 </Stack>
                 <Card>
 
-                    <UserListToolbar numSelected={selected.length} filterName={filterName} onFilterName={handleFilterByName} />
+                    <UserListToolbar numSelected={selected.length} filterName={filterName}
+                                     onFilterName={handleFilterByName}/>
                     <Scrollbar>
                         <TableContainer sx={{minWidth: 800}}>
                             <Table>
@@ -258,13 +296,13 @@ export default function UserPage() {
                                                     </Stack>
                                                 </TableCell>
 
-                                                <TableCell align="left">{toThousands(totalPoints+'')}</TableCell>
+                                                <TableCell align="left">{toThousands(totalPoints + '')}</TableCell>
 
                                                 <TableCell align="left">{timestampToTime(lockTimestamp)}</TableCell>
 
-                                                <TableCell align="left">{totalStaked?
-                                                    Number(totalPoints/ethers.utils.formatEther(totalStaked)*100).toFixed(2)
-                                                    :0} %</TableCell>
+                                                <TableCell align="left">{totalStaked ?
+                                                    Number(totalPoints / ethers.utils.formatEther(totalStaked) * 100).toFixed(2)
+                                                    : 0} %</TableCell>
                                             </TableRow>
                                         );
                                     })}
