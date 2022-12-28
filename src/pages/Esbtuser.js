@@ -37,10 +37,13 @@ import {UserListHead, UserListToolbar} from '../sections/@dashboard/user';
 import {shortAddress} from "./stringUtils"
 import {ethers} from "ethers";
 // ----------------------------------------------------------------------
+import ExportJsonExcel from "js-export-excel";
+
 
 const TABLE_HEAD = [
     {id: 'address', label: 'Address', alignRight: false},
     {id: 'totalPoints', label: 'TotalPoints', alignRight: false},
+    {id: 'rank', label: 'Rank', alignRight: false},
     {id: 'invitedTimestamp', label: 'InvitedTime', alignRight: false},
     {id: 'parent', label: 'Parent', alignRight: false},
     {id: 'sons', label: 'Sons', alignRight: false},
@@ -66,14 +69,14 @@ function timestampToTime(timestamp) {
 
 function descendingComparator(a, b, orderBy) {
 
-    if(orderBy === "totalPoints"){
+    if (orderBy === "totalPoints") {
         if (Number(b[orderBy]) < Number(a[orderBy])) {
             return -1;
         }
         if (Number(b[orderBy]) > Number(a[orderBy])) {
             return 1;
         }
-    }else{
+    } else {
         if (b[orderBy] < a[orderBy]) {
             return -1;
         }
@@ -104,6 +107,24 @@ function applySortFilter(array, comparator, query) {
     return stabilizedThis.map((el) => el[0]);
 }
 
+const downloadFileToExcel = (filteredUsers) => {
+    let dataTable = [];  //excel文件中的数据内容
+    let option = {};  //option代表的就是excel文件
+    dataTable = filteredUsers;  //数据源
+    option.fileName = "下载文件";  //excel文件名称
+    console.log("data===", dataTable)
+    option.datas = [
+        {
+            sheetData: dataTable,  //excel文件中的数据源
+            sheetName: 'Sheet1',  //excel文件中sheet页名称
+            sheetFilter: ['address', 'rank', 'totalPoints', 'formatedTime', 'parentAddress', 'sonsList', 'sonsAmount'],  //excel文件中需显示的列数据
+            sheetHeader: ['Address', 'Rank', 'TotalPoints', 'InvitedTime', 'Parent', 'Sons', 'SonsAmount'],  //excel文件中每列的表头名称
+        }
+    ]
+    let toExcel = new ExportJsonExcel(option);  //生成excel文件
+    toExcel.saveExcel();  //下载excel文件
+};
+
 export default function UserPage() {
 
     let USERLIST = [];
@@ -113,7 +134,7 @@ export default function UserPage() {
     // USERLIST = all;
     // console.log("all!!", USERLIST);
 
-    const {accounts,commonDataStore} = useQueryESBT();
+    const {accounts, commonDataStore} = useQueryESBT();
     // console.log("***accounts",accounts);
     USERLIST = accounts;
 
@@ -201,11 +222,18 @@ export default function UserPage() {
                     <Typography variant="h4" gutterBottom>
                         Total: {commonDataStore.value}
                     </Typography>
+
+                    <Typography variant="h4" gutterBottom onClick={() => {
+                        downloadFileToExcel(filteredUsers)
+                    }}>
+                        excel
+                    </Typography>
                 </Stack>
 
                 <Card>
 
-                    <UserListToolbar numSelected={selected.length} filterName={filterName} onFilterName={handleFilterByName} />
+                    <UserListToolbar numSelected={selected.length} filterName={filterName}
+                                     onFilterName={handleFilterByName}/>
                     <Scrollbar>
                         <TableContainer sx={{minWidth: 800}}>
                             <Table>
@@ -220,7 +248,7 @@ export default function UserPage() {
                                 />
                                 <TableBody>
                                     {filteredUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
-                                        // console.log("rowwww", row)
+                                        // console.log("rowwww:::", row)
                                         const {
                                             id,
                                             taskName,
@@ -234,7 +262,8 @@ export default function UserPage() {
                                             sons,
                                             invitedTimestamp,
                                             totalPoints,
-                                            sonsAmount
+                                            sonsAmount,
+                                            rank
                                         } = row;
                                         const selectedUser = selected.indexOf(taskName) !== -1;
 
@@ -254,6 +283,8 @@ export default function UserPage() {
                                                 </TableCell>
 
                                                 <TableCell align="left">{totalPoints}</TableCell>
+
+                                                <TableCell align="left">{rank}</TableCell>
 
                                                 <TableCell align="left">{timestampToTime(invitedTimestamp)}</TableCell>
 
@@ -287,7 +318,6 @@ export default function UserPage() {
                                                 </TableCell>
 
                                                 <TableCell align="left">{sonsAmount}</TableCell>
-
 
 
                                             </TableRow>

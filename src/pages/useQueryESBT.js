@@ -11,6 +11,44 @@ import {request, gql} from "graphql-request";
 import {random} from "lodash";
 import {ethers} from "ethers";
 
+function timestampToTime(timestamp) {
+    var date = new Date(timestamp * 1000);//时间戳为10位需*1000，时间戳为13位的话不需乘1000
+    var Y = date.getFullYear() + '-';
+    var M = (date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1) + '-';
+    var D = date.getDate() + ' ';
+    var h = date.getHours() + ':';
+    var m = date.getMinutes() + ':';
+    var s = date.getSeconds();
+    return Y + M + D + h + m + s;
+}
+
+function getRank(score) {
+
+    if (score >= 100000) {
+        return "SS"
+    } else if (score >= 40000) {
+        return "S"
+    } else if (score >= 15000) {
+        return "A"
+    } else if (score >= 7500) {
+        return "B"
+    } else if (score >= 3000) {
+        return "C"
+    } else if (score >= 1000) {
+        return "D"
+    } else {
+        return "E"
+    }
+}
+
+function listToString(list) {
+    let result = '';
+    for (let i = 0; i < list.length; i++) {
+        result += list[i].address + ',';
+    }
+    return result;
+}
+
 
 function useQueryMintedUser() {
 
@@ -46,17 +84,21 @@ function useQueryMintedUser() {
             accounts[i].id = i;
             accounts[i].name = accounts[i].address;
             accounts[i].status = "active";
-            accounts[i].avatarUrl = `/assets/images/avatars/avatar_${random(1,8) + 1}.jpg`;
-            accounts[i].totalPoints = Number(ethers.utils.formatEther(accounts[i].totalPoints)).toFixed(2)+"";
+            accounts[i].avatarUrl = `/assets/images/avatars/avatar_${random(1, 8) + 1}.jpg`;
+            accounts[i].totalPoints = Number(ethers.utils.formatEther(accounts[i].totalPoints)).toFixed(2) + "";
             accounts[i].sonsAmount = accounts[i].sons.length;
+            accounts[i].formatedTime = timestampToTime(accounts[i].invitedTimestamp);
+            accounts[i].parentAddress = accounts[i].parent.address;
+            accounts[i].rank = getRank(accounts[i].totalPoints * 1);
+            accounts[i].sonsList = listToString(accounts[i].sons);
         }
-        return {commonDataStore,accounts};
+        return {commonDataStore, accounts};
     });
 }
 
 export default function useQueryESBT() {
     const {status, data, error, isFetching} = useQueryMintedUser();
-    console.log("@@useQueryESBT commonDataStore",data);
+    console.log("@@useQueryESBT commonDataStore", data);
 
-    return isFetching?{accounts: [],commonDataStore:{}}:data;
+    return isFetching ? {accounts: [], commonDataStore: {}} : data;
 }
