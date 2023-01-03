@@ -51,10 +51,12 @@ function listToString(list) {
 
 
 function useQueryMintedUser() {
+    const startTime = 1620000000;
+    const endTime = 1620000000;
 
     return useQuery([], async () => {
         const {commonDataStore, accounts} = await request(
-            "https://api.thegraph.com/subgraphs/name/metaverseblock/esbt002",
+            "https://api.thegraph.com/subgraphs/name/metaverseblock/esbt003",
             gql`
                 query {
                     commonDataStore(id: "totalMintedCounter") {
@@ -66,11 +68,17 @@ function useQueryMintedUser() {
                         address
                         invitedTimestamp
                         totalPoints
+                        invitedScore
                         parent {
                             address
                         }
                         sons {
                             address
+                        }
+                        pointHistory{
+                            typeCode
+                            point
+                            timestamp
                         }
                     }
                 }
@@ -86,6 +94,7 @@ function useQueryMintedUser() {
             accounts[i].status = "active";
             accounts[i].avatarUrl = `/assets/images/avatars/avatar_${random(1, 8) + 1}.jpg`;
             accounts[i].totalPoints = Number(ethers.utils.formatEther(accounts[i].totalPoints)).toFixed(2) + "";
+            accounts[i].invitedScore = Number(ethers.utils.formatEther(accounts[i].invitedScore)).toFixed(2) + "";
             accounts[i].sonsAmount = accounts[i].sons.length;
             accounts[i].formatedTime = timestampToTime(accounts[i].invitedTimestamp);
             accounts[i].parentAddress = accounts[i].parent.address;

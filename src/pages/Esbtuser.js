@@ -43,6 +43,7 @@ import ExportJsonExcel from "js-export-excel";
 const TABLE_HEAD = [
     {id: 'address', label: 'Address', alignRight: false},
     {id: 'totalPoints', label: 'TotalPoints', alignRight: false},
+    {id: 'invitedScore', label: 'InvitedScore', alignRight: false},
     {id: 'rank', label: 'Rank', alignRight: false},
     {id: 'invitedTimestamp', label: 'InvitedTime', alignRight: false},
     {id: 'parent', label: 'Parent', alignRight: false},
@@ -69,7 +70,7 @@ function timestampToTime(timestamp) {
 
 function descendingComparator(a, b, orderBy) {
 
-    if (orderBy === "totalPoints") {
+    if (orderBy === "totalPoints" || orderBy === "invitedScore" || orderBy === "sonsAmount") {
         if (Number(b[orderBy]) < Number(a[orderBy])) {
             return -1;
         }
@@ -263,7 +264,8 @@ export default function UserPage() {
                                             invitedTimestamp,
                                             totalPoints,
                                             sonsAmount,
-                                            rank
+                                            rank,
+                                            invitedScore
                                         } = row;
                                         const selectedUser = selected.indexOf(taskName) !== -1;
 
@@ -283,6 +285,7 @@ export default function UserPage() {
                                                 </TableCell>
 
                                                 <TableCell align="left">{totalPoints}</TableCell>
+                                                <TableCell align="left">{invitedScore}</TableCell>
 
                                                 <TableCell align="left">{rank}</TableCell>
 

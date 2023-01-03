@@ -2,6 +2,7 @@ import { Navigate, useRoutes } from 'react-router-dom';
 // layouts
 import DashboardLayout from './layouts/dashboard';
 import SimpleLayout from './layouts/simple';
+import {AuthWrapComponent} from "./components/AuthWrapComponent";
 //
 import BlogPage from './pages/BlogPage';
 import UserPage from './pages/UserPage';
@@ -16,19 +17,20 @@ import DashboardAppPage from './pages/DashboardAppPage';
 import {Counter} from "./features/counter/Counter";
 import {ReactQuery} from "./features/reactQuery/ReactQuery";
 
+
 // ----------------------------------------------------------------------
 
 export default function Router() {
   const routes = useRoutes([
     {
       path: '/dashboard',
-      element: <DashboardLayout />,
+      element: <AuthWrapComponent><DashboardLayout /></AuthWrapComponent>  ,
       children: [
-        { element: <Navigate to="/dashboard/app" />, index: true },
+        { element: <Navigate to="/dashboard/user" />, index: true },
         { path: 'app', element: <DashboardAppPage /> },
         { path: 'user', element: <UserPage /> },
         { path: 'liquidity', element: <Liquidity /> },
-        { path: 'esbtuser', element: <Esbtuser /> },
+        { path: 'esbtuser', element:  <Esbtuser />  },
         { path: 'vestaker', element: <Vestaker /> },
         { path: 'elpstaker', element: <Elpstaker /> },
         { path: 'counter', element: <Counter /> },

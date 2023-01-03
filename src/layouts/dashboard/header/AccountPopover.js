@@ -4,28 +4,32 @@ import { alpha } from '@mui/material/styles';
 import { Box, Divider, Typography, Stack, MenuItem, Avatar, IconButton, Popover } from '@mui/material';
 // mocks_
 import account from '../../../_mock/account';
+import AuthService from "../../../services/auth";
 
 // ----------------------------------------------------------------------
 
 const MENU_OPTIONS = [
-  {
-    label: 'Home',
-    icon: 'eva:home-fill',
-  },
-  {
-    label: 'Profile',
-    icon: 'eva:person-fill',
-  },
-  {
-    label: 'Settings',
-    icon: 'eva:settings-2-fill',
-  },
+  // {
+  //   label: 'Home',
+  //   icon: 'eva:home-fill',
+  // },
+  // {
+  //   label: 'Profile',
+  //   icon: 'eva:person-fill',
+  // },
+  // {
+  //   label: 'Settings',
+  //   icon: 'eva:settings-2-fill',
+  // },
 ];
 
 // ----------------------------------------------------------------------
 
 export default function AccountPopover() {
   const [open, setOpen] = useState(null);
+
+  const user = AuthService.getCurrentUser();
+  console.log("getCurrentUser user", user);
 
   const handleOpen = (event) => {
     setOpen(event.currentTarget);
@@ -34,6 +38,12 @@ export default function AccountPopover() {
   const handleClose = () => {
     setOpen(null);
   };
+
+    const handleLogout = () => {
+        AuthService.logout();
+        setOpen(null);
+        window.location.reload();
+    };
 
   return (
     <>
@@ -54,7 +64,7 @@ export default function AccountPopover() {
           }),
         }}
       >
-        <Avatar src={account.photoURL} alt="photoURL" />
+        <Avatar src='/assets/images/avatars/avatar_default.jpg' alt="photoURL" />
       </IconButton>
 
       <Popover
@@ -78,11 +88,11 @@ export default function AccountPopover() {
       >
         <Box sx={{ my: 1.5, px: 2.5 }}>
           <Typography variant="subtitle2" noWrap>
-            {account.displayName}
+            {user.username}
           </Typography>
-          <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
-            {account.email}
-          </Typography>
+          {/*<Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>*/}
+          {/*  {account.email}*/}
+          {/*</Typography>*/}
         </Box>
 
         <Divider sx={{ borderStyle: 'dashed' }} />
@@ -97,7 +107,7 @@ export default function AccountPopover() {
 
         <Divider sx={{ borderStyle: 'dashed' }} />
 
-        <MenuItem onClick={handleClose} sx={{ m: 1 }}>
+        <MenuItem onClick={handleLogout} sx={{ m: 1 }}>
           Logout
         </MenuItem>
       </Popover>
